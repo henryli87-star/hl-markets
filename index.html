@@ -29,7 +29,7 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
   font-size: 14px; -webkit-font-smoothing: antialiased;
   padding-top: var(--safe-top);
-  padding-bottom: calc(var(--safe-bottom) + 60px);
+  padding-bottom: calc(var(--safe-bottom) + 52px);
   overflow-x: hidden;
 }
 
@@ -85,8 +85,8 @@ body {
 .section-meta { font-size: 11px; color: var(--muted); }
 
 /* TABLE */
-.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: 0 16px; }
-table { width: 100%; border-collapse: collapse; min-width: 480px; }
+.table-wrap { padding: 0 10px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 thead th {
   font-size: 10px; font-weight: 600; color: var(--muted);
   text-transform: uppercase; letter-spacing: 0.05em;
@@ -104,12 +104,12 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
 tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
 td {
-  padding: 10px 10px; border-bottom: 0.5px solid var(--border);
+  padding: 6px 4px; border-bottom: 0.5px solid var(--border);
   vertical-align: middle; white-space: nowrap;
   background: var(--surface);
 }
 td.r { text-align: right; font-variant-numeric: tabular-nums; }
-.asset-name { font-weight: 600; font-size: 13px; display: flex; align-items: center; gap: 5px; }
+.asset-name { font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 5px; }
 .asset-sub { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: 'SF Mono', 'Fira Code', monospace; }
 .badge { font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 4px; }
 .badge-up { background: var(--green-bg); color: var(--green); }
@@ -171,7 +171,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 }
 .share-handle { width: 36px; height: 4px; background: var(--hint); border-radius: 2px; margin: 0 auto 20px; }
 .share-title { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; margin-bottom: 20px; letter-spacing: 0.02em; text-transform: uppercase; }
-.share-options { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.share-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
 .share-opt {
   background: var(--surface); border: 0.5px solid var(--border2);
   border-radius: 16px; padding: 16px 12px; cursor: pointer;
@@ -232,7 +232,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 
 <!-- STATUS BAR -->
 <div class="statusbar">
-  <span id="ts" style="font-size:11px;color:var(--muted)">Loading…</span>
+  <span id="ts" style="font-size:11px;color:var(--muted)">Loadingâ¦</span>
   <div class="countdown-pill">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span id="countdown">30s</span>
@@ -262,7 +262,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           </tr>
         </thead>
         <tbody id="tbody1">
-          <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching live data…</td></tr>
+          <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching live dataâ¦</td></tr>
         </tbody>
       </table>
     </div>
@@ -290,7 +290,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           </tr>
         </thead>
         <tbody id="tbody2">
-          <tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching live data…</td></tr>
+          <tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching live dataâ¦</td></tr>
         </tbody>
       </table>
     </div>
@@ -309,10 +309,6 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
   <button class="nav-btn primary" onclick="openShare()">
     <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
     Share
-  </button>
-  <button class="nav-btn" onclick="openHL()">
-    <svg viewBox="0 0 24 24"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
-    Trade
   </button>
 </div>
 
@@ -343,13 +339,6 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
         <div class="share-opt-label">Save Image</div>
         <div class="share-opt-sub">Download screenshot</div>
       </div>
-      <a class="share-opt" href="https://app.hyperliquid.xyz/trade/xyz:CL" target="_blank" onclick="closeShareDirect()">
-        <div class="share-opt-icon" style="background:rgba(16,185,129,0.12);border:0.5px solid rgba(16,185,129,0.3)">
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>
-        </div>
-        <div class="share-opt-label">Open HL</div>
-        <div class="share-opt-sub">Trade on Hyperliquid</div>
-      </a>
     </div>
     <button class="share-cancel" onclick="closeShareDirect()">Cancel</button>
   </div>
@@ -359,7 +348,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ── CONFIG ──────────────────────────────────────────
+// ââ CONFIG ââââââââââââââââââââââââââââââââââââââââââ
 const FRI = new Date('2026-03-13T21:00:00Z').getTime();
 const API = 'https://api.hyperliquid.xyz/info';
 // Update this after you deploy to GitHub Pages:
@@ -383,7 +372,7 @@ const M2 = [
   {key:'xyz:XYZ100',   label:'XYZ100',      sub:'xyz:XYZ100',   fmt:v=>v.toLocaleString('en-US',{maximumFractionDigits:0})},
 ];
 
-// ── API HELPERS ──────────────────────────────────────
+// ââ API HELPERS ââââââââââââââââââââââââââââââââââââââ
 async function hl(body) {
   const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
   return r.json();
@@ -411,7 +400,7 @@ async function fetchMarket(m) {
   return {...m, nowPx:px, friClose, vol, candles:sc.map(c=>parseFloat(c.c))};
 }
 
-// ── SPARKLINE ────────────────────────────────────────
+// ââ SPARKLINE ââââââââââââââââââââââââââââââââââââââââ
 function spark(closes, fri) {
   if (!closes?.length || !fri) return '';
   const all = [fri,...closes], mn = Math.min(...all), mx = Math.max(...all);
@@ -434,16 +423,16 @@ function spark(closes, fri) {
   </svg>`;
 }
 
-// ── ROW BUILDER ──────────────────────────────────────
+// ââ ROW BUILDER ââââââââââââââââââââââââââââââââââââââ
 function fv(v) {
   if (v>=1e9) return '$'+(v/1e9).toFixed(2)+'B';
   if (v>=1e6) return '$'+Math.round(v/1e6)+'M';
   return '$'+v.toFixed(0);
 }
 function badge(p) {
-  if (p>0.05) return '<span class="badge badge-up">▲</span>';
-  if (p<-0.05) return '<span class="badge badge-dn">▼</span>';
-  return '<span class="badge badge-fl">→</span>';
+  if (p>0.05) return '<span class="badge badge-up">â²</span>';
+  if (p<-0.05) return '<span class="badge badge-dn">â¼</span>';
+  return '<span class="badge badge-fl">â</span>';
 }
 function buildRow(m, rank) {
   const {nowPx, friClose, vol, candles, fmt} = m;
@@ -463,13 +452,13 @@ function buildRow(m, rank) {
   </tr>`;
 }
 
-// ── LOAD ALL ─────────────────────────────────────────
+// ââ LOAD ALL âââââââââââââââââââââââââââââââââââââââââ
 let loading = false;
 async function loadAll() {
   if (loading) return;
   loading = true;
-  const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching…</td></tr>';
-  const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching…</td></tr>';
+  const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetchingâ¦</td></tr>';
+  const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetchingâ¦</td></tr>';
   document.getElementById('tbody1').innerHTML = spin;
   document.getElementById('tbody2').innerHTML = spin2;
   try {
@@ -490,9 +479,9 @@ async function loadAll() {
   loading = false;
 }
 
-// ── AUTO REFRESH ─────────────────────────────────────
+// ââ AUTO REFRESH âââââââââââââââââââââââââââââââââââââ
 let sl = 30;
-function triggerRefresh() { sl = 30; loadAll(); showToast('Refreshing…'); }
+function triggerRefresh() { sl = 30; loadAll(); showToast('Refreshingâ¦'); }
 setInterval(() => {
   sl--;
   const el = document.getElementById('countdown');
@@ -500,7 +489,7 @@ setInterval(() => {
   if (sl <= 0) { sl = 30; loadAll(); }
 }, 1000);
 
-// ── SHARE FUNCTIONS ──────────────────────────────────
+// ââ SHARE FUNCTIONS ââââââââââââââââââââââââââââââââââ
 function openShare() { document.getElementById('overlay').classList.add('show'); }
 function closeShareDirect() { document.getElementById('overlay').classList.remove('show'); }
 function closeShare(e) { if (e.target === document.getElementById('overlay')) closeShareDirect(); }
@@ -525,14 +514,14 @@ async function captureScreenshot() {
 
 async function shareWhatsApp() {
   closeShareDirect();
-  showToast('Capturing screenshot…', 3000);
+  showToast('Capturing screenshotâ¦', 3000);
   try {
     const canvas = await captureScreenshot();
     canvas.toBlob(async blob => {
       const file = new File([blob], 'hl-markets.png', {type:'image/png'});
       const shareData = {
         title: 'HL Weekend Markets',
-        text: `Hyperliquid Weekend Markets — ${new Date().toLocaleString()}\n${PAGE_URL}`,
+        text: `Hyperliquid Weekend Markets â ${new Date().toLocaleString()}\n${PAGE_URL}`,
         files: [file]
       };
       if (navigator.canShare && navigator.canShare(shareData)) {
@@ -550,7 +539,7 @@ async function shareWhatsApp() {
 
 async function shareImage() {
   closeShareDirect();
-  showToast('Generating screenshot…', 3000);
+  showToast('Generating screenshotâ¦', 3000);
   try {
     const canvas = await captureScreenshot();
     const link = document.createElement('a');
@@ -575,14 +564,13 @@ function copyLink() {
   }
 }
 
-function openHL() { window.open('https://app.hyperliquid.xyz', '_blank'); }
 
-// ── PWA SERVICE WORKER ───────────────────────────────
+// ââ PWA SERVICE WORKER âââââââââââââââââââââââââââââââ
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 
-// ── INIT ─────────────────────────────────────────────
+// ââ INIT âââââââââââââââââââââââââââââââââââââââââââââ
 loadAll();
 </script>
 </body>
