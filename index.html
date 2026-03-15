@@ -23,11 +23,548 @@
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
 }
+
 html, body { height: 100%; background: var(--bg); color: var(--text); overscroll-behavior: none; }
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', sans-serif;
-  -webkit-font-smoothing: antialiased;
+  font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Text', 'Segoe UI', sans-serif;
+  font-size: 14px; -webkit-font-smoothing: antialiased;
   padding-top: var(--safe-top);
   padding-bottom: calc(var(--safe-bottom) + 52px);
   overflow-x: hidden;
 }
+
+/* TOP BAR */
+.topbar {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(15,17,23,0.92);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-bottom: 0.5px solid var(--border);
+  padding: 12px 16px 10px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.topbar-left { display: flex; align-items: center; gap: 8px; }
+.topbar h1 { font-size: 17px; font-weight: 700; letter-spacing: -0.03em; }
+.topbar h1 em { font-style: normal; color: var(--accent); }
+.live-badge {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--green-bg); border: 0.5px solid rgba(16,185,129,0.3);
+  border-radius: 20px; padding: 3px 8px;
+  font-size: 10px; font-weight: 600; color: var(--green); letter-spacing: 0.02em;
+}
+.live-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--green); animation: pulse 2s infinite; }
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.35} }
+.topbar-right { display: flex; gap: 8px; }
+.icon-btn {
+  width: 34px; height: 34px; border-radius: 10px;
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; transition: all 0.15s; flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+.icon-btn:active { transform: scale(0.92); background: var(--hint); }
+.icon-btn svg { width: 16px; height: 16px; stroke: var(--muted); fill: none; stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; }
+
+/* STATUS BAR */
+.statusbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 8px 16px; font-size: 11px; color: var(--muted);
+  border-bottom: 0.5px solid var(--border);
+}
+.countdown-pill {
+  display: flex; align-items: center; gap: 5px;
+  background: var(--surface); border-radius: 20px; padding: 3px 10px;
+  font-size: 11px; color: var(--muted);
+}
+.countdown-pill svg { width: 11px; height: 11px; stroke: var(--muted); fill: none; stroke-width: 2; stroke-linecap: round; }
+
+/* SECTIONS */
+.content { padding: 0 0 16px; }
+.section { padding: 16px 0 0; }
+.section-header { padding: 0 16px 10px; display: flex; align-items: baseline; justify-content: space-between; }
+.section-title { font-size: 13px; font-weight: 700; color: var(--text); letter-spacing: -0.01em; }
+.section-meta { font-size: 11px; color: var(--muted); }
+
+/* TABLE */
+.table-wrap { padding: 0 10px; overflow: hidden; }
+table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+thead th {
+  font-size: 10px; font-weight: 600; color: var(--muted);
+  text-transform: uppercase; letter-spacing: 0.05em;
+  padding: 8px 10px; text-align: left;
+  border-bottom: 0.5px solid var(--border);
+  background: var(--surface); white-space: nowrap;
+}
+thead th:first-child { border-radius: 10px 0 0 0; }
+thead th:last-child { border-radius: 0 10px 0 0; }
+thead th.r { text-align: right; }
+tbody { }
+tbody tr { transition: background 0.1s; }
+tbody tr:active { background: rgba(255,255,255,0.04); }
+tbody tr:last-child td { border-bottom: none; }
+tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
+tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
+td {
+  padding: 5px 3px; border-bottom: 0.5px solid var(--border);
+  vertical-align: middle; white-space: nowrap;
+  background: var(--surface);
+}
+td.r { text-align: right; font-variant-numeric: tabular-nums; }
+.asset-name { font-weight: 600; font-size: 10px; display: flex; align-items: center; gap: 5px; }
+.asset-sub { font-size: 8px; color: var(--muted); margin-top: 2px; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+.pos { color: var(--green); font-weight: 600; font-size: 10px; }
+.neg { color: var(--red); font-weight: 600; font-size: 10px; }
+.flat { color: var(--muted); font-weight: 500; font-size: 10px; }
+.price { font-size: 10px; font-weight: 600; }
+.fri-price { font-size: 9.5px; color: var(--muted); }
+.vol-cell { font-size: 9.5px; color: var(--muted); }
+.rank-cell { font-size: 9px; color: var(--hint); font-weight: 700; padding-right: 4px; }
+
+/* LOADING */
+.loading-row td { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; background: var(--surface); }
+.spinner {
+  display: inline-block; width: 16px; height: 16px;
+  border: 2px solid var(--hint); border-top-color: var(--accent);
+  border-radius: 50%; animation: spin 0.65s linear infinite;
+  vertical-align: middle; margin-right: 6px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* DIVIDER */
+.divider { height: 0.5px; background: var(--border); margin: 20px 16px 0; }
+
+/* BOTTOM NAV */
+.bottom-nav {
+  position: fixed; bottom: 0; left: 0; right: 0; z-index: 200;
+  background: rgba(15,17,23,0.95);
+  backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+  border-top: 0.5px solid var(--border);
+  padding: 10px 0 calc(10px + var(--safe-bottom));
+  display: flex; justify-content: space-around; align-items: center;
+}
+.nav-btn {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  cursor: pointer; -webkit-tap-highlight-color: transparent;
+  padding: 4px 20px; border-radius: 12px; transition: all 0.15s;
+  background: none; border: none; color: var(--muted); font-size: 10px; font-weight: 500;
+}
+.nav-btn:active { background: var(--surface2); }
+.nav-btn svg { width: 22px; height: 22px; stroke: var(--muted); fill: none; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.nav-btn.primary { color: var(--accent); }
+.nav-btn.primary svg { stroke: var(--accent); }
+
+/* SHARE OVERLAY */
+.overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+  display: none; align-items: flex-end; justify-content: center;
+  padding-bottom: var(--safe-bottom);
+}
+.overlay.show { display: flex; }
+.share-sheet {
+  background: var(--surface2); border-radius: 20px 20px 0 0;
+  width: 100%; max-width: 500px;
+  padding: 12px 20px 32px; border: 0.5px solid var(--border2);
+}
+.share-handle { width: 36px; height: 4px; background: var(--hint); border-radius: 2px; margin: 0 auto 20px; }
+.share-title { font-size: 13px; font-weight: 600; color: var(--muted); text-align: center; margin-bottom: 20px; letter-spacing: 0.02em; text-transform: uppercase; }
+.share-options { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.share-opt {
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: 16px; padding: 16px 12px; cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  -webkit-tap-highlight-color: transparent; transition: all 0.15s;
+  text-decoration: none;
+}
+.share-opt:active { transform: scale(0.96); background: var(--hint); }
+.share-opt-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+.share-opt-label { font-size: 12px; font-weight: 600; color: var(--text); }
+.share-opt-sub { font-size: 10px; color: var(--muted); text-align: center; }
+.wa-icon { background: #25D366; }
+.link-icon { background: var(--accent-bg); border: 0.5px solid rgba(99,102,241,0.3); }
+.img-icon { background: rgba(255,149,0,0.12); border: 0.5px solid rgba(255,149,0,0.3); }
+.share-cancel {
+  margin-top: 12px; width: 100%; padding: 14px;
+  background: var(--surface); border: 0.5px solid var(--border2);
+  border-radius: 14px; font-size: 15px; font-weight: 600;
+  color: var(--text); cursor: pointer; -webkit-tap-highlight-color: transparent;
+  transition: all 0.15s;
+}
+.share-cancel:active { background: var(--hint); }
+
+/* TOAST */
+.toast {
+  position: fixed; bottom: calc(80px + var(--safe-bottom)); left: 50%; transform: translateX(-50%);
+  background: var(--surface2); border: 0.5px solid var(--border2);
+  border-radius: 20px; padding: 10px 18px; font-size: 13px; font-weight: 500;
+  color: var(--text); white-space: nowrap; z-index: 600;
+  opacity: 0; transition: opacity 0.2s; pointer-events: none;
+}
+.toast.show { opacity: 1; }
+
+/* CAPTURE AREA */
+#capture-area {
+  background: var(--bg);
+  min-width: 380px;
+}
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-left">
+    <h1>HL <em>Markets</em></h1>
+    <div class="live-badge"><span class="live-dot"></span>LIVE</div>
+  </div>
+  <div class="topbar-right">
+    <div class="icon-btn" onclick="triggerRefresh()" title="Refresh">
+      <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    </div>
+    <div class="icon-btn" onclick="openShare()" title="Share">
+      <svg viewBox="0 0 24 24"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+    </div>
+  </div>
+</div>
+
+<!-- STATUS BAR -->
+<div class="statusbar">
+  <span id="ts" style="font-size:11px;color:var(--muted)">LoadingÃÂ¢ÃÂÃÂ¦</span>
+  <div class="countdown-pill">
+    <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+    <span id="countdown">30s</span>
+  </div>
+</div>
+
+<!-- CAPTURE AREA (tables) -->
+<div id="capture-area">
+<div class="content">
+
+  <!-- TABLE 1: MY MARKETS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Hyperliquid vs Friday Close</span>
+      <span class="section-meta">Macro</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Market</th>
+            <th class="r">Now</th>
+            <th class="r">Fri Close</th>
+            <th>Chart</th>
+            <th class="r">Chg</th>
+            <th class="r">Vol</th>
+          </tr>
+        </thead>
+        <tbody id="tbody1">
+          <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching live dataÃÂ¢ÃÂÃÂ¦</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="divider"></div>
+
+  <!-- TABLE 2: TOP MARKETS -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Top 5 by Volume</span>
+      <span class="section-meta">By volume</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            
+            <th>Market</th>
+            <th class="r">Now</th>
+            <th class="r">Fri Close</th>
+            <th>Chart</th>
+            <th class="r">Chg</th>
+            <th class="r">Vol</th>
+          </tr>
+        </thead>
+        <tbody id="tbody2">
+          <tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching live dataÃÂ¢ÃÂÃÂ¦</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
+<!-- end capture area -->
+</div>
+
+<!-- BOTTOM NAV -->
+<div class="bottom-nav">
+  <button class="nav-btn" onclick="triggerRefresh()">
+    <svg viewBox="0 0 24 24"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
+    Refresh
+  </button>
+  <button class="nav-btn primary" onclick="openShare()">
+    <svg viewBox="0 0 24 24"><path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/><polyline points="16 6 12 2 8 6"/><line x1="12" y1="2" x2="12" y2="15"/></svg>
+    Share
+  </button>
+</div>
+
+<!-- SHARE SHEET OVERLAY -->
+<div class="overlay" id="overlay" onclick="closeShare(event)">
+  <div class="share-sheet" id="share-sheet">
+    <div class="share-handle"></div>
+    <div class="share-title">Share Markets</div>
+    <div class="share-options">
+      <div class="share-opt" onclick="shareWhatsApp()">
+        <div class="share-opt-icon wa-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="white"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </div>
+        <div class="share-opt-label">WhatsApp</div>
+        <div class="share-opt-sub">Screenshot to chat</div>
+      </div>
+      <div class="share-opt" onclick="copyLink()">
+        <div class="share-opt-icon link-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#6366f1" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
+        <div class="share-opt-label">Copy Link</div>
+        <div class="share-opt-sub">Share dashboard URL</div>
+      </div>
+      <div class="share-opt" onclick="shareImage()">
+        <div class="share-opt-icon img-icon">
+          <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#ff9500" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg>
+        </div>
+        <div class="share-opt-label">Save Image</div>
+        <div class="share-opt-sub">Download screenshot</div>
+      </div>
+    </div>
+    <button class="share-cancel" onclick="closeShareDirect()">Cancel</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ CONFIG ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+const FRI = new Date('2026-03-13T21:00:00Z').getTime();
+const API = 'https://api.hyperliquid.xyz/info';
+// Update this after you deploy to GitHub Pages:
+const PAGE_URL = window.location.href.split('?')[0];
+
+const M1 = [
+  {key:'xyz:CL',       label:'WTI Crude',  sub:'xyz:CL',       fmt:v=>'$'+v.toFixed(2)},
+  {key:'xyz:BRENTOIL', label:'Brent',       sub:'xyz:BRENTOIL', fmt:v=>'$'+v.toFixed(2)},
+  {key:'xyz:GOLD',     label:'Gold',        sub:'xyz:GOLD',     fmt:v=>'$'+v.toFixed(0)},
+  {key:'xyz:SILVER',   label:'Silver',      sub:'xyz:SILVER',   fmt:v=>'$'+v.toFixed(2)},
+  {key:'xyz:EUR',      label:'EUR/USD',     sub:'xyz:EUR',      fmt:v=>v.toFixed(4)},
+  {key:'xyz:JPY',      label:'USD/JPY',     sub:'xyz:JPY',      fmt:v=>v.toFixed(2)},
+  {key:'xyz:XYZ100',   label:'XYZ100',      sub:'xyz:XYZ100',   fmt:v=>v.toLocaleString('en-US',{maximumFractionDigits:0})},
+];
+
+const M2 = [
+  {key:'BTC',          label:'Bitcoin',     sub:'BTC',          fmt:v=>'$'+v.toLocaleString('en-US',{maximumFractionDigits:0})},
+  {key:'ETH',          label:'Ethereum',    sub:'ETH',          fmt:v=>'$'+v.toFixed(2)},
+  {key:'xyz:CL',       label:'WTI Crude',   sub:'xyz:CL',       fmt:v=>'$'+v.toFixed(2)},
+  {key:'HYPE',         label:'HYPE',        sub:'HYPE',         fmt:v=>'$'+v.toFixed(3)},
+  {key:'xyz:XYZ100',   label:'XYZ100',      sub:'xyz:XYZ100',   fmt:v=>v.toLocaleString('en-US',{maximumFractionDigits:0})},
+];
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ API HELPERS ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+async function hl(body) {
+  const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
+  return r.json();
+}
+async function getMid(coin) {
+  const d = await hl({type:'l2Book', coin});
+  if (!d?.levels) return null;
+  return (parseFloat(d.levels[0]?.[0]?.px||0) + parseFloat(d.levels[1]?.[0]?.px||0)) / 2;
+}
+async function getCandles(coin, s, e) {
+  const d = await hl({type:'candleSnapshot', req:{coin, interval:'1h', startTime:s, endTime:e}});
+  return Array.isArray(d) ? d : [];
+}
+async function fetchMarket(m) {
+  const now = Date.now(), isHip3 = m.key.startsWith('xyz:');
+  const [sc, fc] = await Promise.all([
+    getCandles(m.key, FRI, now),
+    getCandles(m.key, FRI-7200000, FRI+3600000)
+  ]);
+  let px = isHip3 ? await getMid(m.key) : null;
+  if (!px && sc.length) px = parseFloat(sc[sc.length-1].c);
+  const lf = fc.length ? fc[fc.length-1] : null;
+  const friClose = lf ? parseFloat(lf.c) : null;
+  let vol = 0; sc.forEach(c => { vol += parseFloat(c.v||0)*parseFloat(c.c||0); });
+  return {...m, nowPx:px, friClose, vol, candles:sc.map(c=>parseFloat(c.c))};
+}
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ SPARKLINE ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+function spark(closes, fri) {
+  if (!closes?.length || !fri) return '';
+  const all = [fri,...closes], mn = Math.min(...all), mx = Math.max(...all);
+  const rng = mx - mn || fri*0.001;
+  const W=90, H=30, p=2, iw=W-p*2, ih=H-p*2;
+  const tx = i => p+(i/closes.length)*iw;
+  const ty = v => p+ih-((v-mn)/rng)*ih;
+  const bY = ty(fri), up = closes[closes.length-1] >= fri;
+  const lc = up ? '#10b981' : '#f87171';
+  const fc = up ? 'rgba(16,185,129,0.15)' : 'rgba(248,113,113,0.15)';
+  const pts = closes.map((v,i)=>`${tx(i+1).toFixed(1)},${ty(v).toFixed(1)}`);
+  const fx=tx(1), lx=tx(closes.length), fy=ty(closes[0]), ly=ty(closes[closes.length-1]);
+  const area = `M${fx.toFixed(1)},${bY.toFixed(1)} L${fx.toFixed(1)},${fy.toFixed(1)} L${pts.join(' L')} L${lx.toFixed(1)},${bY.toFixed(1)} Z`;
+  const line = `M${fx.toFixed(1)},${fy.toFixed(1)} L${pts.join(' L')}`;
+  return `<svg width="${W}" height="${H}" viewBox="0 0 ${W} ${H}" style="display:block">
+    <path d="${area}" fill="${fc}"/>
+    <line x1="${p}" y1="${bY.toFixed(1)}" x2="${W-p}" y2="${bY.toFixed(1)}" stroke="rgba(255,255,255,0.1)" stroke-width="0.5" stroke-dasharray="2,2"/>
+    <path d="${line}" fill="none" stroke="${lc}" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    <circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="2" fill="${lc}"/>
+  </svg>`;
+}
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ ROW BUILDER ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+function fv(v) {
+  if (v>=1e9) return '$'+(v/1e9).toFixed(2)+'B';
+  if (v>=1e6) return '$'+Math.round(v/1e6)+'M';
+  return '$'+v.toFixed(0);
+}
+function badge(p){return "";}
+function buildRow(m, rank) {
+  const {nowPx, friClose, vol, candles, fmt} = m;
+  if (!nowPx||!friClose) return `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px;font-size:11px;background:var(--surface)">No data</td></tr>`;
+  const pct = ((nowPx-friClose)/friClose)*100;
+  const pc = pct>0.05?'pos':pct<-0.05?'neg':'flat'; const _dummy=0;
+  const ps = (pct>=0?'+':'')+pct.toFixed(2)+'%';
+  const rankCell = rank!=null ? `<td class="rank-cell">${rank}</td>` : '';
+  return `<tr>
+    ${rankCell}
+    <td><div class="asset-name">${m.label}</div><div class="asset-sub">${m.sub}</div></td>
+    <td class="r price">${fmt(nowPx)}</td>
+    <td class="r fri-price">${fmt(friClose)}</td>
+    <td>${spark(candles,friClose)}</td>
+    <td class="r ${pc}">${ps}</td>
+    <td class="r vol-cell">${fv(vol)}</td>
+  </tr>`;
+}
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ LOAD ALL ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+let loading = false;
+async function loadAll() {
+  if (loading) return;
+  loading = true;
+  const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>FetchingÃÂ¢ÃÂÃÂ¦</td></tr>';
+  const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>FetchingÃÂ¢ÃÂÃÂ¦</td></tr>';
+  document.getElementById('tbody1').innerHTML = spin;
+  document.getElementById('tbody2').innerHTML = spin2;
+  try {
+    const allKeys = [...new Set([...M1.map(m=>m.key),...M2.map(m=>m.key)])];
+    const km = {}; [...M1,...M2].forEach(m=>{if(!km[m.key])km[m.key]=m;});
+    const results = await Promise.all(allKeys.map(k=>fetchMarket(km[k])));
+    const dm = {}; results.forEach(r=>{dm[r.key]=r;});
+    document.getElementById('tbody1').innerHTML = M1.map(m=>buildRow(dm[m.key]||m, null)).join('');
+    const top5 = M2.map(m=>dm[m.key]||m).sort((a,b)=>(b.vol||0)-(a.vol||0)).slice(0,5);
+    document.getElementById('tbody2').innerHTML = top5.map((m,i)=>buildRow(m,i+1)).join('');
+    const now = new Date();
+    document.getElementById('ts').textContent = 'Updated ' + now.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  } catch(e) {
+    const err = `<tr><td colspan="7" style="color:var(--red);padding:16px;text-align:center;font-size:12px;background:var(--surface)">Error: ${e.message}</td></tr>`;
+    document.getElementById('tbody1').innerHTML = err;
+    document.getElementById('tbody2').innerHTML = err;
+  }
+  loading = false;
+}
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ AUTO REFRESH ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+let sl = 30;
+function triggerRefresh() { sl = 30; loadAll(); showToast('RefreshingÃÂ¢ÃÂÃÂ¦'); }
+setInterval(() => {
+  sl--;
+  const el = document.getElementById('countdown');
+  if (el) el.textContent = sl + 's';
+  if (sl <= 0) { sl = 30; loadAll(); }
+}, 1000);
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ SHARE FUNCTIONS ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+function openShare() { document.getElementById('overlay').classList.add('show'); }
+function closeShareDirect() { document.getElementById('overlay').classList.remove('show'); }
+function closeShare(e) { if (e.target === document.getElementById('overlay')) closeShareDirect(); }
+
+function showToast(msg, dur=2000) {
+  const t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), dur);
+}
+
+async function captureScreenshot() {
+  const el = document.getElementById('capture-area');
+  return await html2canvas(el, {
+    backgroundColor: '#0f1117',
+    scale: 2,
+    useCORS: true,
+    logging: false,
+    scrollY: 0,
+    windowWidth: el.scrollWidth,
+  });
+}
+
+async function shareWhatsApp() {
+  closeShareDirect();
+  showToast('Capturing screenshotÃÂ¢ÃÂÃÂ¦', 3000);
+  try {
+    const canvas = await captureScreenshot();
+    canvas.toBlob(async blob => {
+      const file = new File([blob], 'hl-markets.png', {type:'image/png'});
+      const shareData = {
+        title: 'HL Weekend Markets',
+        text: `Hyperliquid Weekend Markets ÃÂ¢ÃÂÃÂ ${new Date().toLocaleString()}\n${PAGE_URL}`,
+        files: [file]
+      };
+      if (navigator.canShare && navigator.canShare(shareData)) {
+        await navigator.share(shareData);
+      } else {
+        // Fallback: open WhatsApp with text link
+        const url = `https://wa.me/?text=${encodeURIComponent('Hyperliquid Weekend Markets: ' + PAGE_URL)}`;
+        window.open(url, '_blank');
+      }
+    }, 'image/png');
+  } catch(e) {
+    showToast('Share cancelled');
+  }
+}
+
+async function shareImage() {
+  closeShareDirect();
+  showToast('Generating screenshotÃÂ¢ÃÂÃÂ¦', 3000);
+  try {
+    const canvas = await captureScreenshot();
+    const link = document.createElement('a');
+    link.download = `hl-markets-${new Date().toISOString().slice(0,10)}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showToast('Screenshot saved!');
+  } catch(e) {
+    showToast('Error: ' + e.message);
+  }
+}
+
+function copyLink() {
+  closeShareDirect();
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(PAGE_URL).then(() => showToast('Link copied!'));
+  } else {
+    const t = document.createElement('textarea');
+    t.value = PAGE_URL; document.body.appendChild(t);
+    t.select(); document.execCommand('copy'); document.body.removeChild(t);
+    showToast('Link copied!');
+  }
+}
+
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ PWA SERVICE WORKER ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+
+// ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ INIT ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
+loadAll();
+</script>
+</body>
+</html>
