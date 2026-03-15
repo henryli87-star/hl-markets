@@ -104,24 +104,21 @@ tbody tr:last-child td { border-bottom: none; }
 tbody tr:last-child td:first-child { border-radius: 0 0 0 10px; }
 tbody tr:last-child td:last-child { border-radius: 0 0 10px 0; }
 td {
-  padding: 6px 4px; border-bottom: 0.5px solid var(--border);
+  padding: 5px 3px; border-bottom: 0.5px solid var(--border);
   vertical-align: middle; white-space: nowrap;
   background: var(--surface);
 }
 td.r { text-align: right; font-variant-numeric: tabular-nums; }
-.asset-name { font-weight: 600; font-size: 11px; display: flex; align-items: center; gap: 5px; }
-.asset-sub { font-size: 10px; color: var(--muted); margin-top: 2px; font-family: 'SF Mono', 'Fira Code', monospace; }
-.badge { font-size: 9px; font-weight: 700; padding: 2px 5px; border-radius: 4px; }
-.badge-up { background: var(--green-bg); color: var(--green); }
-.badge-dn { background: var(--red-bg); color: var(--red); }
-.badge-fl { background: rgba(255,255,255,0.06); color: var(--muted); }
-.pos { color: var(--green); font-weight: 600; }
-.neg { color: var(--red); font-weight: 600; }
-.flat { color: var(--muted); font-weight: 500; }
-.price { font-size: 13px; font-weight: 600; }
-.fri-price { font-size: 12px; color: var(--muted); }
-.vol-cell { font-size: 12px; color: var(--muted); }
-.rank-cell { font-size: 11px; color: var(--hint); font-weight: 700; padding-right: 4px; }
+.asset-name { font-weight: 600; font-size: 10px; display: flex; align-items: center; gap: 5px; }
+.asset-sub { font-size: 8px; color: var(--muted); margin-top: 2px; font-family: 'SF Mono', 'Fira Code', monospace; }
+
+.pos { color: var(--green); font-weight: 600; font-size: 10px; }
+.neg { color: var(--red); font-weight: 600; font-size: 10px; }
+.flat { color: var(--muted); font-weight: 500; font-size: 10px; }
+.price { font-size: 10px; font-weight: 600; }
+.fri-price { font-size: 9.5px; color: var(--muted); }
+.vol-cell { font-size: 9.5px; color: var(--muted); }
+.rank-cell { font-size: 9px; color: var(--hint); font-weight: 700; padding-right: 4px; }
 
 /* LOADING */
 .loading-row td { text-align: center; padding: 32px; color: var(--muted); font-size: 12px; background: var(--surface); }
@@ -232,7 +229,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 
 <!-- STATUS BAR -->
 <div class="statusbar">
-  <span id="ts" style="font-size:11px;color:var(--muted)">Loadingâ¦</span>
+  <span id="ts" style="font-size:11px;color:var(--muted)">LoadingÃ¢ÂÂ¦</span>
   <div class="countdown-pill">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span id="countdown">30s</span>
@@ -262,7 +259,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           </tr>
         </thead>
         <tbody id="tbody1">
-          <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching live dataâ¦</td></tr>
+          <tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetching live dataÃ¢ÂÂ¦</td></tr>
         </tbody>
       </table>
     </div>
@@ -290,7 +287,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           </tr>
         </thead>
         <tbody id="tbody2">
-          <tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching live dataâ¦</td></tr>
+          <tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetching live dataÃ¢ÂÂ¦</td></tr>
         </tbody>
       </table>
     </div>
@@ -348,7 +345,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 <div class="toast" id="toast"></div>
 
 <script>
-// ââ CONFIG ââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ CONFIG Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 const FRI = new Date('2026-03-13T21:00:00Z').getTime();
 const API = 'https://api.hyperliquid.xyz/info';
 // Update this after you deploy to GitHub Pages:
@@ -372,7 +369,7 @@ const M2 = [
   {key:'xyz:XYZ100',   label:'XYZ100',      sub:'xyz:XYZ100',   fmt:v=>v.toLocaleString('en-US',{maximumFractionDigits:0})},
 ];
 
-// ââ API HELPERS ââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ API HELPERS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 async function hl(body) {
   const r = await fetch(API, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(body)});
   return r.json();
@@ -400,7 +397,7 @@ async function fetchMarket(m) {
   return {...m, nowPx:px, friClose, vol, candles:sc.map(c=>parseFloat(c.c))};
 }
 
-// ââ SPARKLINE ââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ SPARKLINE Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function spark(closes, fri) {
   if (!closes?.length || !fri) return '';
   const all = [fri,...closes], mn = Math.min(...all), mx = Math.max(...all);
@@ -423,27 +420,23 @@ function spark(closes, fri) {
   </svg>`;
 }
 
-// ââ ROW BUILDER ââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ ROW BUILDER Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function fv(v) {
   if (v>=1e9) return '$'+(v/1e9).toFixed(2)+'B';
   if (v>=1e6) return '$'+Math.round(v/1e6)+'M';
   return '$'+v.toFixed(0);
 }
-function badge(p) {
-  if (p>0.05) return '<span class="badge badge-up">â²</span>';
-  if (p<-0.05) return '<span class="badge badge-dn">â¼</span>';
-  return '<span class="badge badge-fl">â</span>';
-}
+function badge(p){return "";}
 function buildRow(m, rank) {
   const {nowPx, friClose, vol, candles, fmt} = m;
   if (!nowPx||!friClose) return `<tr><td colspan="7" style="text-align:center;color:var(--muted);padding:12px;font-size:11px;background:var(--surface)">No data</td></tr>`;
   const pct = ((nowPx-friClose)/friClose)*100;
-  const pc = pct>0.05?'pos':pct<-0.05?'neg':'flat';
+  const pc = pct>0.05?'pos':pct<-0.05?'neg':'flat'; const _dummy=0;
   const ps = (pct>=0?'+':'')+pct.toFixed(2)+'%';
   const rankCell = rank!=null ? `<td class="rank-cell">${rank}</td>` : '';
   return `<tr>
     ${rankCell}
-    <td><div class="asset-name">${m.label}${badge(pct)}</div><div class="asset-sub">${m.sub}</div></td>
+    <td><div class="asset-name">${m.label}</div><div class="asset-sub">${m.sub}</div></td>
     <td class="r price">${fmt(nowPx)}</td>
     <td class="r fri-price">${fmt(friClose)}</td>
     <td>${spark(candles,friClose)}</td>
@@ -452,13 +445,13 @@ function buildRow(m, rank) {
   </tr>`;
 }
 
-// ââ LOAD ALL âââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ LOAD ALL Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 let loading = false;
 async function loadAll() {
   if (loading) return;
   loading = true;
-  const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>Fetchingâ¦</td></tr>';
-  const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>Fetchingâ¦</td></tr>';
+  const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>FetchingÃ¢ÂÂ¦</td></tr>';
+  const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>FetchingÃ¢ÂÂ¦</td></tr>';
   document.getElementById('tbody1').innerHTML = spin;
   document.getElementById('tbody2').innerHTML = spin2;
   try {
@@ -479,9 +472,9 @@ async function loadAll() {
   loading = false;
 }
 
-// ââ AUTO REFRESH âââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ AUTO REFRESH Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 let sl = 30;
-function triggerRefresh() { sl = 30; loadAll(); showToast('Refreshingâ¦'); }
+function triggerRefresh() { sl = 30; loadAll(); showToast('RefreshingÃ¢ÂÂ¦'); }
 setInterval(() => {
   sl--;
   const el = document.getElementById('countdown');
@@ -489,7 +482,7 @@ setInterval(() => {
   if (sl <= 0) { sl = 30; loadAll(); }
 }, 1000);
 
-// ââ SHARE FUNCTIONS ââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ SHARE FUNCTIONS Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 function openShare() { document.getElementById('overlay').classList.add('show'); }
 function closeShareDirect() { document.getElementById('overlay').classList.remove('show'); }
 function closeShare(e) { if (e.target === document.getElementById('overlay')) closeShareDirect(); }
@@ -514,14 +507,14 @@ async function captureScreenshot() {
 
 async function shareWhatsApp() {
   closeShareDirect();
-  showToast('Capturing screenshotâ¦', 3000);
+  showToast('Capturing screenshotÃ¢ÂÂ¦', 3000);
   try {
     const canvas = await captureScreenshot();
     canvas.toBlob(async blob => {
       const file = new File([blob], 'hl-markets.png', {type:'image/png'});
       const shareData = {
         title: 'HL Weekend Markets',
-        text: `Hyperliquid Weekend Markets â ${new Date().toLocaleString()}\n${PAGE_URL}`,
+        text: `Hyperliquid Weekend Markets Ã¢ÂÂ ${new Date().toLocaleString()}\n${PAGE_URL}`,
         files: [file]
       };
       if (navigator.canShare && navigator.canShare(shareData)) {
@@ -539,7 +532,7 @@ async function shareWhatsApp() {
 
 async function shareImage() {
   closeShareDirect();
-  showToast('Generating screenshotâ¦', 3000);
+  showToast('Generating screenshotÃ¢ÂÂ¦', 3000);
   try {
     const canvas = await captureScreenshot();
     const link = document.createElement('a');
@@ -565,12 +558,12 @@ function copyLink() {
 }
 
 
-// ââ PWA SERVICE WORKER âââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ PWA SERVICE WORKER Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('./sw.js').catch(()=>{});
 }
 
-// ââ INIT âââââââââââââââââââââââââââââââââââââââââââââ
+// Ã¢ÂÂÃ¢ÂÂ INIT Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
 loadAll();
 </script>
 </body>
