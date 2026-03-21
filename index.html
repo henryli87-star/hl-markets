@@ -243,7 +243,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
   <!-- TABLE 1: MY MARKETS -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Hyperliquid vs Friday Close</span>
+      <span class="section-title">Hyperliquid vs Last Close</span>
       <span class="section-meta">Macro</span>
     </div>
     <div class="table-wrap">
@@ -252,7 +252,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           <tr>
             <th>Market</th>
             <th class="r">Now</th>
-            <th class="r">Fri Close</th>
+            <th class="r">Last Close</th>
             <th>Chart</th>
             <th class="r">Chg</th>
             <th class="r">Vol</th>
@@ -280,7 +280,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
             
             <th>Market</th>
             <th class="r">Now</th>
-            <th class="r">Fri Close</th>
+            <th class="r">Last Close</th>
             <th>Chart</th>
             <th class="r">Chg</th>
             <th class="r">Vol</th>
@@ -346,7 +346,27 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 
 <script>
 // ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ CONFIG ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
-const FRI = new Date('2026-03-13T21:00:00Z').getTime();
+// Dynamic: last NY close = 4pm ET on most recent weekday (T-1)
+  function getLastNYClose() {
+    function isEDT(d) {
+      const y = d.getUTCFullYear();
+      const mar8 = new Date(Date.UTC(y, 2, 8));
+      const dstStart = new Date(Date.UTC(y, 2, 8 + (7 - mar8.getUTCDay()) % 7, 7));
+      const nov1 = new Date(Date.UTC(y, 10, 1));
+      const dstEnd = new Date(Date.UTC(y, 10, 1 + (7 - nov1.getUTCDay()) % 7, 6));
+      return d >= dstStart && d < dstEnd;
+    }
+    const now = new Date();
+    let d = new Date(now);
+    d.setUTCHours(isEDT(d) ? 20 : 21, 0, 0, 0);
+    if (d > now) d.setUTCDate(d.getUTCDate() - 1);
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) {
+      d.setUTCDate(d.getUTCDate() - 1);
+    }
+    d.setUTCHours(isEDT(d) ? 20 : 21, 0, 0, 0);
+    return d.getTime();
+  }
+  const FRI = getLastNYClose();
 const API = 'https://api.hyperliquid.xyz/info';
 // Update this after you deploy to GitHub Pages:
 const PAGE_URL = window.location.href.split('?')[0];
