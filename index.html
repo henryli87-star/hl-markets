@@ -207,6 +207,10 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
   background: var(--bg);
   min-width: 380px;
 }
+
+  .close-toggle { display:inline-flex; border:1px solid #444; border-radius:12px; overflow:hidden; margin-left:10px; vertical-align:middle; font-size:11px; }
+  .toggle-opt { padding:2px 8px; cursor:pointer; color:#888; background:transparent; }
+  .toggle-opt.active { background:#444; color:#fff; }
 </style>
 </head>
 <body>
@@ -230,6 +234,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
 <!-- STATUS BAR -->
 <div class="statusbar">
   <span id="ts" style="font-size:11px;color:var(--muted)">LoadingÃÂ¢ÃÂÃÂ¦</span>
+  <span class="close-toggle"><span id="toggle-ny" class="toggle-opt active" onclick="setCloseMode('NY')">NY</span><span id="toggle-lon" class="toggle-opt" onclick="setCloseMode('LON')">LON</span></span>
   <div class="countdown-pill">
     <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
     <span id="countdown">30s</span>
@@ -243,7 +248,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
   <!-- TABLE 1: MY MARKETS -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Hyperliquid vs Last Close</span>
+      <span class="section-title" id="close-section-title">Hyperliquid vs Last Close</span>
       <span class="section-meta">Macro</span>
     </div>
     <div class="table-wrap">
@@ -252,7 +257,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
           <tr>
             <th>Market</th>
             <th class="r">Now</th>
-            <th class="r">Last Close</th>
+            <th class="r close-col-header">Last Close</th>
             <th>Chart</th>
             <th class="r">Chg</th>
             <th class="r">Vol</th>
@@ -280,7 +285,7 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
             
             <th>Market</th>
             <th class="r">Now</th>
-            <th class="r">Last Close</th>
+            <th class="r close-col-header">Last Close</th>
             <th>Chart</th>
             <th class="r">Chg</th>
             <th class="r">Vol</th>
@@ -366,7 +371,27 @@ td.r { text-align: right; font-variant-numeric: tabular-nums; }
     d.setUTCHours(isEDT(d) ? 20 : 21, 0, 0, 0);
     return d.getTime();
   }
-  const FRI = getLastNYClose();
+  function getLastLondonClose() {
+    function isBST(d) {
+      const y = d.getUTCFullYear();
+      const mar31 = new Date(Date.UTC(y, 2, 31));
+      const bstStart = new Date(Date.UTC(y, 2, 31 - mar31.getUTCDay(), 1));
+      const oct31 = new Date(Date.UTC(y, 9, 31));
+      const bstEnd = new Date(Date.UTC(y, 9, 31 - oct31.getUTCDay(), 1));
+      return d >= bstStart && d < bstEnd;
+    }
+    const now = new Date();
+    let d = new Date(now);
+    d.setUTCHours(isBST(d) ? 15 : 16, 0, 0, 0);
+    if (d > now) d.setUTCDate(d.getUTCDate() - 1);
+    while (d.getUTCDay() === 0 || d.getUTCDay() === 6) {
+      d.setUTCDate(d.getUTCDate() - 1);
+    }
+    d.setUTCHours(isBST(d) ? 15 : 16, 0, 0, 0);
+    return d.getTime();
+  }
+  let FRI = getLastNYClose();
+  let closeMode = 'NY';
 const API = 'https://api.hyperliquid.xyz/info';
 // Update this after you deploy to GitHub Pages:
 const PAGE_URL = window.location.href.split('?')[0];
@@ -468,14 +493,24 @@ function buildRow(m, rank) {
 // ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ LOAD ALL ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
 // ── OPEN CHART ──────────────────────────────────────────────────────────────
   function openChart(key) {
-    const ticker = key.replace('xyz:', '');
-    window.open('https://app.hyperliquid.xyz/trade/' + ticker, '_blank');
+    window.open('https://' + 'app.hyperliquid.xyz/trade/' + key, '_blank');
   }
 
   let loading = false;
-async function loadAll() {
+function setCloseMode(mode) {
+    closeMode = mode;
+    document.getElementById('toggle-ny').className = 'toggle-opt' + (mode === 'NY' ? ' active' : '');
+    document.getElementById('toggle-lon').className = 'toggle-opt' + (mode === 'LON' ? ' active' : '');
+    loadAll();
+  }
+  async function loadAll() {
   if (loading) return;
   loading = true;
+    FRI = closeMode === 'LON' ? getLastLondonClose() : getLastNYClose();
+    const friLabel = closeMode === 'LON' ? 'LON Close' : 'NY Close';
+    const secTitle = document.getElementById('close-section-title');
+    if (secTitle) secTitle.textContent = 'Hyperliquid vs ' + friLabel;
+    document.querySelectorAll('.close-col-header').forEach(el => el.textContent = friLabel);
   const spin = '<tr class="loading-row"><td colspan="6"><span class="spinner"></span>FetchingÃÂ¢ÃÂÃÂ¦</td></tr>';
   const spin2 = '<tr class="loading-row"><td colspan="7"><span class="spinner"></span>FetchingÃÂ¢ÃÂÃÂ¦</td></tr>';
   document.getElementById('tbody1').innerHTML = spin;
