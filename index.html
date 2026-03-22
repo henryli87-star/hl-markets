@@ -459,14 +459,20 @@ function buildRow(m, rank) {
     <td><div class="asset-name">${m.label}</div><div class="asset-sub">${m.sub}</div></td>
     <td class="r price">${fmt(nowPx)}</td>
     <td class="r fri-price">${fmt(friClose)}</td>
-    <td>${spark(candles,friClose)}</td>
+    <td style="cursor:pointer" title="Double-tap to open chart" ondblclick="openChart('${m.key}')">${spark(candles,friClose)}</td>
     <td class="r ${pc}">${ps}</td>
     <td class="r vol-cell">${fv(vol)}</td>
   </tr>`;
 }
 
 // ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ LOAD ALL ÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂÃÂ¢ÃÂÃÂ
-let loading = false;
+// ── OPEN CHART ──────────────────────────────────────────────────────────────
+  function openChart(key) {
+    const ticker = key.replace('xyz:', '');
+    window.open('https://app.hyperliquid.xyz/trade/' + ticker, '_blank');
+  }
+
+  let loading = false;
 async function loadAll() {
   if (loading) return;
   loading = true;
